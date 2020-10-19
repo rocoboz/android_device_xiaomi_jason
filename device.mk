@@ -26,20 +26,23 @@ $(call inherit-product, device/xiaomi/sdm660-common/sdm660.mk)
 
 $(call inherit-product, vendor/xiaomi/jason/jason-vendor.mk)
 
+$(call inherit-product-if-exists, vendor/miuicamera/common/common-vendor.mk)
+
 # Setup dalvik vm configs
 $(call inherit-product, frameworks/native/build/phone-xhdpi-6144-dalvik-heap.mk)
 
 # Overlays
 DEVICE_PACKAGE_OVERLAYS += \
     $(LOCAL_PATH)/overlay \
-    $(LOCAL_PATH)/overlay-lineage
-
-PRODUCT_ENFORCE_RRO_EXCLUDED_OVERLAYS += \
-    $(LOCAL_PATH)/overlay-lineage/lineage-sdk
 
 # Boot animation
 TARGET_SCREEN_HEIGHT := 1920
 TARGET_SCREEN_WIDTH := 1080
+
+# Camera
+PRODUCT_PACKAGES += \
+    camera.sdm660 \
+    libmm-qcamera
 
 # Haters gonna hate..
 PRODUCT_CHARACTERISTICS := nosdcard
@@ -63,27 +66,25 @@ PRODUCT_PROPERTY_OVERRIDES += \
     persist.vendor.audio.spv3.enable=true \
     persist.vendor.audio.avs.afe_api_version=2
 
-# Camera
-PRODUCT_PACKAGES += \
-    camera.sdm660 \
-    libmm-qcamera
-
 PRODUCT_PROPERTY_OVERRIDES += \
+    persist.camera.dxoaf.sc=1 \
+    persist.camera.gyro.disable=0 \
     persist.camera.hist.high=20 \
     persist.camera.hist.drc=1.2 \
+    persist.camera.stats.test=5 \
     persist.vendor.camera.expose.aux=1 \
     persist.vendor.camera.sat.enable=1 \
     persist.vendor.camera.instant.aec=1 \
     persist.vendor.camera.ae.instant.bound=20 \
     persist.vendor.camera.set.afd=4 \
+    persist.vendor.camera.dxo=1 \
+    persist.vendor.camera.HAL3.enabled=1 \
     persist.vendor.camera.feature.cac=1 \
     persist.vendor.camera.fovc.enable=1 \
     persist.vendor.dualcam.lpm.enable=1 \
-    persist.vendor.dualcam.defer.enable=1
-
-PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
+    persist.vendor.dualcam.defer.enable=1 \
     vendor.camera.aux.packageblacklist=com.tencent.mm \
-    vendor.camera.hal1.packagelist=com.whatsapp,com.intsig.camscanner,com.instagram.android
+    vendor.camera.aux.packagelist=com.android.camera,org.codeaurora.snapcam
 
 # ConfigPanel
 PRODUCT_PACKAGES += \
@@ -116,10 +117,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     android.hardware.keymaster@3.0-impl \
     android.hardware.keymaster@3.0-service
-
-# Lineage hardware
-PRODUCT_PACKAGES += \
-    vendor.lineage.touch@1.0-service.jason
 
 # NFC
 PRODUCT_PACKAGES += \
@@ -179,3 +176,8 @@ PRODUCT_PACKAGES += \
 # Wifi
 PRODUCT_PACKAGES += \
     readmac
+
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/wifi/hostapd.accept:$(TARGET_COPY_OUT_VENDOR)/etc/hostapd/hostapd.accept \
+    $(LOCAL_PATH)/wifi/hostapd.conf:$(TARGET_COPY_OUT_VENDOR)/etc/hostapd/hostapd_default.conf \
+    $(LOCAL_PATH)/wifi/hostapd.deny:$(TARGET_COPY_OUT_VENDOR)/etc/hostapd/hostapd.deny

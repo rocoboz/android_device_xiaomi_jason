@@ -32,13 +32,13 @@ TARGET_KERNEL_VERSION := 4.4
 
 # Camera
 BOARD_QTI_CAMERA_32BIT_ONLY := true
-$(call project-set-path,qcom-camera,$(DEVICE_PATH)/camera)
 
 # Crypto
 TARGET_HW_DISK_ENCRYPTION := true
 
 # Display
 TARGET_ADDITIONAL_GRALLOC_10_USAGE_BITS := 0x00002000U
+TARGET_SCREEN_DENSITY := 411
 
 # Mainfest
 DEVICE_MANIFEST_FILE += $(DEVICE_PATH)/configs/manifest.xml
@@ -63,7 +63,7 @@ BOARD_PLAT_PRIVATE_SEPOLICY_DIR += $(DEVICE_PATH)/sepolicy/private
 BOARD_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy/vendor
 
 # Security patch level
-VENDOR_SECURITY_PATCH := 2019-03-01
+VENDOR_SECURITY_PATCH := 2020-06-01
 
 # inherit from the proprietary version
 -include vendor/xiaomi/jason/BoardConfigVendor.mk
